@@ -2,6 +2,14 @@
 
 Drag and drop pano's from the public folder into the scene and you can see the viewer change.  Best viewed with occulus or remotely from cardboard for dragging.
 
+# Test it yourself
+
+```
+git clone https://github.com/JohnRodney/Meteor-VR-Pano-demo
+cd Meteor-VR-Pano-demo
+meteor
+```
+
 # Objects
 
 ## SceneManager
