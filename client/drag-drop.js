@@ -3,8 +3,8 @@ document.addEventListener( 'drop', function ( event ) {
 
   var reader = new FileReader();
   reader.addEventListener( 'load', function ( event ) {
-    material.map.image.src = event.target.result;
-    material.map.needsUpdate = true;
+    Utils.material.map.image.src = event.target.result;
+    Utils.material.map.needsUpdate = true;
   }, false );
 
   reader.readAsDataURL( event.dataTransfer.files[ 0 ] );
