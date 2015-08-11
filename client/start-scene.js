@@ -3,5 +3,3 @@ Template.scene.rendered = function(){
   SceneManager.scene.add( Utils.panoFactory() );
   Utils.animate(SceneManager);
 };
-
-
