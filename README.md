@@ -43,7 +43,7 @@ Combine the SceneManager with utils in a template's rendered callback
 ```
 Template.scene.rendered = function(){
   SceneManager.init();
-  SceneManager.scene.add( Utils.panoFactory() );
+  SceneManager.scene.add( Utils.panoFactory( 'DantesView.jpg' ) );
   Utils.animate(SceneManager);
 };
 ```
