@@ -2,12 +2,17 @@ Utils.sphereFactory = function(name, pos) {
 
   var geometry = new THREE.SphereGeometry( 2, 20, 20 ),
       material = new THREE.MeshBasicMaterial( {color: 0x00ffaa, wireframe: true} ),
-      mesh = new THREE.Mesh( geometry, material );
+      // mesh = new THREE.Mesh( geometry, material );
+      mesh = new Waypoint( geometry, material );
+      mesh.payload = 'OlympicHurricaneRidge.jpg';
+      // debugger;
 
   geometry.applyMatrix( new THREE.Matrix4().makeScale( -1, 1, 1 ) );
 
+
   mesh.position = Utils.coordinateCopy(mesh.position, pos);
   mesh.name = name;
+
 
   return mesh;
 };

@@ -1,7 +1,6 @@
 SceneManager = {};
 
 SceneManager.init = function(){
-
   this.renderer = new THREE.WebGLRenderer({ antialias: true });
   this.renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild(this.renderer.domElement);
@@ -14,6 +13,9 @@ SceneManager.init = function(){
   this.effect = new THREE.VREffect(this.renderer);
   this.effect.setSize(window.innerWidth, window.innerHeight);
   this.manager = new WebVRManager(this.renderer, this.effect, {hideButton: false});
+
+  this.raycaster = new THREE.Raycaster();
+  this.mouse = new THREE.Vector2();
 
 };
 
