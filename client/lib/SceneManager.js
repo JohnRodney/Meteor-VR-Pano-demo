@@ -19,6 +19,7 @@ SceneManager.init = function(){
 
 };
 
+
 SceneManager.addMultiple = function(arr){
   arr.forEach( function(mesh) { this.scene.add( mesh ); }.bind(this) );
 };
@@ -26,3 +27,4 @@ SceneManager.addMultiple = function(arr){
 function deleteByName(name){
   this.remove( this.getObjectByName( name ) );
 }
+

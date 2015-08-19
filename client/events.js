@@ -57,6 +57,9 @@ function onMouseClick(event) {
 
 }
 
+
+
 window.addEventListener('keydown', onKey, true);
 window.addEventListener('resize', onWindowResize, false);
-window.addEventListener( 'click', onMouseClick, false );
+// SceneManager.controls.addEventListener('change', listen);
+// window.addEventListener( 'click', onMouseClick, false );
