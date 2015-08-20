@@ -13,9 +13,7 @@ Template.scene.rendered = function(){
   SceneManager.init();
   SceneManager.addMultiple(
     [ Utils.panoFactory( '40000.jpg' , 'pano' ),
-      waypoint1
-    ]
-  );
+      waypoint1]);
 
   Utils.animate( SceneManager );
 
