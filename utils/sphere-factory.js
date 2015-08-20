@@ -1,8 +1,9 @@
 Utils.sphereFactory = function(name, pos) {
 
+  Utils.waypointMaterial = new THREE.MeshPhongMaterial( { color: 0x00aa00, specular: 0xffffff, shininess: 430, shading: THREE.SmoothShading, transparent: true} );
+
   var geometry = new THREE.SphereGeometry( 2, 20, 20 ),
-      material = new THREE.MeshBasicMaterial( {color: 0x00ffaa, wireframe: true} ),
-      mesh = new THREE.Mesh( geometry, material );
+      mesh = new THREE.Mesh( geometry, Utils.waypointMaterial );
 
   geometry.applyMatrix( new THREE.Matrix4().makeScale( -1, 1, 1 ) );
 

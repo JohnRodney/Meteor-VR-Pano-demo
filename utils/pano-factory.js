@@ -1,4 +1,3 @@
-
 Utils.panoFactory = function(image, name) {
 
   Utils.material = new THREE.MeshBasicMaterial( {
