@@ -10,8 +10,18 @@ var waypoint1 = new Waypoint({
   }
 });
 
+
 Template.scene.onRendered (function() {
+  var pano = Places.findOne({}).panos[0];
   SceneManager.init();
-  SceneManager.addMultiple([ Utils.panoFactory( '40000.jpg' , 'pano' ), waypoint1]);
+  SceneManager.addMultiple([ Utils.panoFactory( '40000.jpg' , 'pano' ), waypoint1,
+   new Waypoint({
+    payload: pano.imagePath,
+    position: {
+      x: pano.waypoints[0].position.x,
+      y: pano.waypoints[0].position.y,
+      z: pano.waypoints[0].position.z
+    }}
+  )]);
   Utils.animate( [SceneManager, Utils] );
 });

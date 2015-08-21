@@ -24,13 +24,23 @@ Utils.update = function(){
 
 function changePanos(mesh) {
 
-  if(mesh.payload === Utils.material.map.image.src || Utils.material.map.isLoading){
+  if(compareIncompleteUrls(mesh.payload, Utils.material.map.image.src) || Utils.material.map.isLoading){
     return false;
   }
 
   Utils.material.map.image.src = mesh.payload;
+  // Set Transition start event right here
+  setOnLoadCallback();
+
+  return true;
+}
+
+function compareIncompleteUrls(incomplete, complete) {
+  return window.location.origin + '/' + incomplete === complete;
+}
+
+function setOnLoadCallback() {
   Utils.material.map.isLoading = true;
-  Utils.transition({mesh: mesh, type: 'fade-out', duration: 5});
 
   Utils.material.map.image.addEventListener( 'load', function ( event ) {
     Utils.material.map.needsUpdate = true;
