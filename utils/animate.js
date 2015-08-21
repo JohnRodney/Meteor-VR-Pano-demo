@@ -1,7 +1,4 @@
-Utils.animate = function(SM) {
-
-  SM.controls.update();
-  SM.manager.render(SceneManager.scene, SceneManager.camera);
-  requestAnimationFrame( function() { this.animate( SM ); }.bind(this) );
-
+Utils.animate = function(objsToUpdate) {
+  objsToUpdate.forEach( function( obj ) { obj.update(); } );
+  requestAnimationFrame( function() { this.animate( objsToUpdate ); }.bind(this) );
 };
