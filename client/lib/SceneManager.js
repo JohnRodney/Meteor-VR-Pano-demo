@@ -8,6 +8,7 @@ SceneManager.init = function(){
 
   this.scene = new THREE.Scene();
   this.scene.delete = deleteByName;
+
   this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.3, 10000);
   this.controls = new THREE.VRControls(this.camera);
 
@@ -15,6 +16,7 @@ SceneManager.init = function(){
   this.effect.setSize(window.innerWidth, window.innerHeight);
 
   this.manager = new WebVRManager(this.renderer, this.effect, {hideButton: false});
+  this.clock = new THREE.Clock(true);
 
   this.clock = new THREE.Clock(true);
   this.raycaster = new THREE.Raycaster();

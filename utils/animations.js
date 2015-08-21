@@ -18,8 +18,6 @@ Utils.handleError = function(err) {
 /* warn - a shorthand name for (Utils.handleError) */
 var warn = Utils.handleError;
 
-/*
-
 /* (Utils.transition) - is a function that accepts an options object and creates an {animation} object
  *                      then places in the [Utils.animations] array. To be assessed during callback
  *
@@ -37,7 +35,6 @@ Utils.transition = function(options) {
   var animation = {};
 
   /* Give useful errors if used incorrectly */
-
   if (!options) {
     return warn('A valid options object was not passed to the transition Utils.transition function');
   }
@@ -63,7 +60,6 @@ Utils.transition = function(options) {
   *  TODO: since the var is hoisted in es5 either add an es6 transpiler or declare
   *        'var prop' at the top of the function
   * * * */
-
   for (var prop in options ) {
     animation[prop] = options[prop];
   }
@@ -83,7 +79,6 @@ Utils.transition = function(options) {
   Utils.animations.push(animation);
 
 };
-
 
 /* (getObjectByType) - is a function that accepts a String: "type" and an object {opts}
  *
