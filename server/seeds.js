@@ -1,4 +1,5 @@
 Meteor.startup(function(){
+  if(Places.find().count() === 0){
     Places.insert({
       panos: [{
         waypoints: [{
@@ -9,9 +10,20 @@ Meteor.startup(function(){
             z: -10,
           }
         }],
-        imagePath: '20000.jpg',
+        imagePath: 'VJ2.jpg',
+      }, {
+        waypoints: [{
+          index: 0,
+          position: {
+            x: 30,
+            y: 0,
+            z: 30,
+          }
+        }],
+        imagePath: 'VJ1.jpg',
       }],
     });
+  }
 });
 
 

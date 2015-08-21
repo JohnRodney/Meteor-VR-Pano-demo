@@ -23,12 +23,15 @@ Utils.update = function(){
 };
 
 function changePanos(mesh) {
+  console.log(mesh.pointer);
+  var targetPano = Places.findOne({}).panos[mesh.pointer];
 
-  if(compareIncompleteUrls(mesh.payload, Utils.material.map.image.src) || Utils.material.map.isLoading){
+  console.log(targetPano);
+  if(compareIncompleteUrls(targetPano.imagePath, Utils.material.map.image.src) || Utils.material.map.isLoading){
     return false;
   }
 
-  Utils.material.map.image.src = mesh.payload;
+  Utils.material.map.image.src = targetPano.imagePath;
   // Set Transition start event right here
   setOnLoadCallback();
 

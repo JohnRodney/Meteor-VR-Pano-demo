@@ -8,7 +8,7 @@ Waypoint = function Waypoint(config) {
   this.mesh = new THREE.Mesh( geometry, material );
   this.mesh.name = 'waypoint';
   this.mesh.position = setPosition(this.mesh.position,config.position);
-  this.mesh.payload = config.payload;
+  this.mesh.pointer = config.pointer;
 
   return this.mesh;
 };
