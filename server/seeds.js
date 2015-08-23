@@ -5,7 +5,7 @@ Meteor.startup(function(){
         waypoints: [{
           index: 1,
           position: {
-            x: 10,
+            x: -25,
             y: 0,
             z: -10,
           }
@@ -15,13 +15,31 @@ Meteor.startup(function(){
         waypoints: [{
           index: 0,
           position: {
-            x: 30,
+            x: -35,
             y: 0,
-            z: 30,
+            z: 0,
+          }
+        }, {
+          index: 2,
+          position: {
+            x: 35,
+            y: 0,
+            z: 0,
           }
         }],
         imagePath: 'VJ1.jpg',
-      }],
+      }, {
+        waypoints: [{
+          index: 1,
+          position: {
+            x: 3,
+            y: 0,
+            z: 35,
+          }
+        }],
+        imagePath: 'VJ3.jpg',
+      }
+      ],
     });
   }
 });

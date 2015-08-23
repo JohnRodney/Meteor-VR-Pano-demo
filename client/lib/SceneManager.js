@@ -28,6 +28,7 @@ SceneManager.init = function(){
   this.setLookAt = setLookAt;
   this.getLookAtCollisions = getLookAtCollisions;
   this.update = update;
+  this.start = new Date().getTime();
 };
 
 SceneManager.addMultiple = function(arr){

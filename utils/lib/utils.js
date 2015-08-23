@@ -17,20 +17,26 @@ Utils.handleAnimations = function() {
   });
 };
 
+Utils.uniforms = [];
+
 Utils.update = function(){
   Utils.handleCollisions(changePanos, 'waypoint');
   Utils.handleAnimations();
+  Utils.uniforms.forEach(function(mesh){
+    mesh.material.uniforms['time'].value = .00025 * ( Date.now() - SceneManager.start );
+    mesh.rotation.x += 0.01;
+  });
 };
 
 function changePanos(mesh) {
-  console.log(mesh.pointer);
   var targetPano = Places.findOne({}).panos[mesh.pointer];
 
-  console.log(targetPano);
   if(compareIncompleteUrls(targetPano.imagePath, Utils.material.map.image.src) || Utils.material.map.isLoading){
     return false;
   }
 
+  SceneManager.activePano = mesh.pointer;
+  Utils.changeScene();
   Utils.material.map.image.src = targetPano.imagePath;
   // Set Transition start event right here
   setOnLoadCallback();
