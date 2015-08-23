@@ -1,27 +1,42 @@
 Waypoint = function Waypoint(config) {
-
-  var geometry = new THREE.SphereGeometry( 2, 20, 20 );
-  geometry.applyMatrix( new THREE.Matrix4().makeScale( -1, 1, 1 ) );
-
-  var material = new THREE.MeshBasicMaterial( {color: 0x00ffaa, wireframe: true} );
-
-  this.mesh = new THREE.Mesh( geometry, material );
-  this.mesh.name = 'waypoint';
-  this.mesh.position = setPosition(this.mesh.position,config.position);
-  this.mesh.payload = config.payload;
-
-  return this.mesh;
+  return this.mesh = setUpWayPointMesh(config);
 };
 
+function setUpWayPointMesh(config){
+  var mesh = new THREE.Mesh( glassGeometry(), glassMaterial());
+
+  mesh.name = 'waypoint';
+  mesh.position = setPosition(mesh.position,config.position);
+  mesh.pointer = config.pointer;
+  Utils.uniforms.push(mesh);
+
+  return mesh;
+}
+
+function glassGeometry(){
+  var geometry = new THREE.DodecahedronGeometry( 2, 5 );
+  geometry.applyMatrix( new THREE.Matrix4().makeScale( -1, 1, 1 ) );
+  return geometry;
+}
+
+function glassMaterial(){
+  return new THREE.ShaderMaterial( {
+    uniforms: {
+      time: { type: "f", value: 0.0},
+      texture1: { type: 't', value: 0, texture: THREE.ImageUtils.loadTexture( 'water.jpg' ) },
+    },
+    attributes: {
+      displacement: {type: "f", value: [] },
+    },
+    vertexShader: document.getElementById( 'vertexShader' ).textContent,
+    fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+    transparent: true
+  });
+}
+
 function setPosition(a, b) {
-  var pos = 0;
-  a.x = b.x || pos;
-  a.y = b.y || pos;
-  a.z = b.z || pos;
+  a.x = b.x || 0;
+  a.y = b.y || 0;
+  a.z = b.z || 0;
   return a;
 }
-
-function listen() {
-  alert('change!');
-}
-

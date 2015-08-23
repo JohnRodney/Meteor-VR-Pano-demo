@@ -1,17 +1,76 @@
-/* Waypoint should take an object; For now payload and position must be specified. We can also extend this by
- * merely adding new config options and implementing in Waypoint
- * * */
-var waypoint1 = new Waypoint({
-  payload: '10000.jpg',
-  position: {
-    x: -50,
-    y: 0,
-    z:-10
-  }
+Template.scene.onRendered (function() {
+  loadWrapper();
 });
 
-Template.scene.onRendered (function() {
+
+function loadWrapper(){
+  if(Places.find().count() === 0){
+    setTimeout(loadWrapper, 500);
+  } else {
+    init();
+  }
+}
+
+function init(){
   SceneManager.init();
-  SceneManager.addMultiple([ Utils.panoFactory( '40000.jpg' , 'pano' ), waypoint1]);
+  setupPanoSceneInfo();
+  addMeshesToScene();
+  animateAndInitUtils();
+}
+
+function animateAndInitUtils(){
   Utils.animate( [SceneManager, Utils] );
-});
+
+  Utils.changeScene = function(){
+    deleteAllWaypointsInScene();
+    addNewWayPointsToScene();
+  };
+}
+
+function addMeshesToScene(){
+  SceneManager.addMultiple([
+  Utils.panoFactory( SceneManager.panos[SceneManager.activePano].imagePath , 'pano' )]
+  .concat(getWayPoints(SceneManager.activePano)));
+}
+
+function setupPanoSceneInfo(){
+  SceneManager.panos = Places.findOne({}).panos;
+  SceneManager.activePano = 0;
+  loadAllImages();
+}
+
+function getWayPoints(index){
+  return SceneManager.panos[index].waypoints.map(function(waypoint){
+    return new Waypoint({
+      pointer: waypoint.index,
+      position: {
+        x: waypoint.position.x,
+        y: waypoint.position.y,
+        z: waypoint.position.z
+      }});
+    });
+}
+
+function loadAllImages(){
+  SceneManager.panos.forEach(function(pano){
+    pano.image = new Image();
+    pano.image.src = pano.imagePath;
+    pano.image.addEventListener( 'load', function ( event ) {
+      console.log('loaded');
+    }, false );
+  });
+}
+
+function deleteAllWaypointsInScene(){
+  SceneManager.scene.children.filter( function(child){
+    if(child.name === 'waypoint'){
+      return child;
+    }
+  }).map(function (res){
+    SceneManager.scene.remove(res);
+  });
+}
+
+function addNewWayPointsToScene(){
+  SceneManager.addMultiple(getWayPoints(SceneManager.activePano));
+}

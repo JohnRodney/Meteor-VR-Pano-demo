@@ -17,23 +17,46 @@ Utils.handleAnimations = function() {
   });
 };
 
+Utils.uniforms = [];
+
 Utils.update = function(){
   Utils.handleCollisions(changePanos, 'waypoint');
   Utils.handleAnimations();
+  Utils.uniforms.forEach(function(mesh){
+    mesh.material.uniforms['time'].value = .00025 * ( Date.now() - SceneManager.start );
+    mesh.rotation.x += 0.01;
+  });
 };
 
 function changePanos(mesh) {
+  var targetPano = Places.findOne({}).panos[mesh.pointer];
 
-  if(mesh.payload === Utils.material.map.image.src || Utils.material.map.isLoading){
+  if(compareIncompleteUrls(targetPano.imagePath, Utils.material.map.image.src) || Utils.material.map.isLoading){
     return false;
   }
 
-  Utils.material.map.image.src = mesh.payload;
+  return handlePanoChange(mesh.pointer, targetPano.imagePath);
+}
+
+function handlePanoChange(pointer, imagePath){
   Utils.material.map.isLoading = true;
-  Utils.transition({mesh: mesh, type: 'fade-out', duration: 5});
+  SceneManager.activePano = pointer;
+  Utils.changeScene();
+  Utils.material.map.image.src = imagePath;
+  setOnLoadCallback();
+  return true;
+}
+
+function compareIncompleteUrls(incomplete, complete) {
+  return window.location.origin + '/' + incomplete === complete;
+}
+
+function setOnLoadCallback() {
+  Utils.material.map.isLoading = true;
 
   Utils.material.map.image.addEventListener( 'load', function ( event ) {
     Utils.material.map.needsUpdate = true;
     Utils.material.map.isLoading = false;
   }, false );
+  return true;
 }
