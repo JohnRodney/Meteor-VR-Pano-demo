@@ -1,9 +1,26 @@
 Waypoint = function Waypoint(config) {
+  return this.mesh = setUpWayPointMesh(config);
+};
 
+function setUpWayPointMesh(config){
+  var mesh = new THREE.Mesh( glassGeometry(), glassMaterial());
+
+  mesh.name = 'waypoint';
+  mesh.position = setPosition(mesh.position,config.position);
+  mesh.pointer = config.pointer;
+  Utils.uniforms.push(mesh);
+
+  return mesh;
+}
+
+function glassGeometry(){
   var geometry = new THREE.DodecahedronGeometry( 2, 5 );
   geometry.applyMatrix( new THREE.Matrix4().makeScale( -1, 1, 1 ) );
+  return geometry;
+}
 
-  var material = new THREE.ShaderMaterial( {
+function glassMaterial(){
+  return new THREE.ShaderMaterial( {
     uniforms: {
       time: { type: "f", value: 0.0},
       texture1: { type: 't', value: 0, texture: THREE.ImageUtils.loadTexture( 'water.jpg' ) },
@@ -15,17 +32,7 @@ Waypoint = function Waypoint(config) {
     fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
     transparent: true
   });
-
-
-  this.mesh = new THREE.Mesh( geometry, material );
-  this.mesh.name = 'waypoint';
-  this.mesh.position = setPosition(this.mesh.position,config.position);
-  this.mesh.pointer = config.pointer;
-
-  Utils.uniforms.push(this.mesh);
-
-  return this.mesh;
-};
+}
 
 function setPosition(a, b) {
   a.x = b.x || 0;
