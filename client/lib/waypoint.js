@@ -28,14 +28,8 @@ Waypoint = function Waypoint(config) {
 };
 
 function setPosition(a, b) {
-  var pos = 0;
-  a.x = b.x || pos;
-  a.y = b.y || pos;
-  a.z = b.z || pos;
+  a.x = b.x || 0;
+  a.y = b.y || 0;
+  a.z = b.z || 0;
   return a;
 }
-
-function listen() {
-  alert('change!');
-}
-

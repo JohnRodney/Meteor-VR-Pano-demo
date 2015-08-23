@@ -1,47 +1,29 @@
 Meteor.startup(function(){
   if(Places.find().count() === 0){
     Places.insert({
-      panos: [{
-        waypoints: [{
-          index: 1,
-          position: {
-            x: -25,
-            y: 0,
-            z: -10,
-          }
-        }],
-        imagePath: 'VJ2.jpg',
-      }, {
-        waypoints: [{
-          index: 0,
-          position: {
-            x: -35,
-            y: 0,
-            z: 0,
-          }
-        }, {
-          index: 2,
-          position: {
-            x: 35,
-            y: 0,
-            z: 0,
-          }
-        }],
-        imagePath: 'VJ1.jpg',
-      }, {
-        waypoints: [{
-          index: 1,
-          position: {
-            x: 3,
-            y: 0,
-            z: 35,
-          }
-        }],
-        imagePath: 'VJ3.jpg',
-      }
+      panos: [
+        panoFactory([waypointFactory(1, -25, 0, -10)], 'VJ2.jpg'),
+        panoFactory([waypointFactory(0, -35, 0, 0), waypointFactory(2, 35, 0, 0)], 'VJ1.jpg'),
+        panoFactory([waypointFactory(1, 3, 0, 35)], 'VJ3.jpg')
       ],
     });
   }
 });
 
+function panoFactory(waypoints, image){
+  return {
+    waypoints: waypoints,
+    imagePath: image,
+  };
+}
 
+function waypointFactory(i, x, y, z){
+  return {
+    index: i,
+    position: {
+      x: x,
+      y: y,
+      z: z,
+    }
+  };
+}

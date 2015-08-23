@@ -35,12 +35,15 @@ function changePanos(mesh) {
     return false;
   }
 
-  SceneManager.activePano = mesh.pointer;
-  Utils.changeScene();
-  Utils.material.map.image.src = targetPano.imagePath;
-  // Set Transition start event right here
-  setOnLoadCallback();
+  return handlePanoChange(mesh.pointer, targetPano.imagePath);
+}
 
+function handlePanoChange(pointer, imagePath){
+  Utils.material.map.isLoading = true;
+  SceneManager.activePano = pointer;
+  Utils.changeScene();
+  Utils.material.map.image.src = imagePath;
+  setOnLoadCallback();
   return true;
 }
 
@@ -55,4 +58,5 @@ function setOnLoadCallback() {
     Utils.material.map.needsUpdate = true;
     Utils.material.map.isLoading = false;
   }, false );
+  return true;
 }

@@ -1,7 +1,7 @@
-
 Template.scene.onRendered (function() {
   loadWrapper();
 });
+
 
 function loadWrapper(){
   if(Places.find().count() === 0){
@@ -11,9 +11,36 @@ function loadWrapper(){
   }
 }
 
+function init(){
+  SceneManager.init();
+  setupPanoSceneInfo();
+  addMeshesToScene();
+  animateAndInitUtils();
+}
+
+function animateAndInitUtils(){
+  Utils.animate( [SceneManager, Utils] );
+
+  Utils.changeScene = function(){
+    deleteAllWaypointsInScene();
+    addNewWayPointsToScene();
+  };
+}
+
+function addMeshesToScene(){
+  SceneManager.addMultiple([
+  Utils.panoFactory( SceneManager.panos[SceneManager.activePano].imagePath , 'pano' )]
+  .concat(getWayPoints(SceneManager.activePano)));
+}
+
+function setupPanoSceneInfo(){
+  SceneManager.panos = Places.findOne({}).panos;
+  SceneManager.activePano = 0;
+  loadAllImages();
+}
+
 function getWayPoints(index){
   return SceneManager.panos[index].waypoints.map(function(waypoint){
-    console.log('CREATED');
     return new Waypoint({
       pointer: waypoint.index,
       position: {
@@ -22,29 +49,6 @@ function getWayPoints(index){
         z: waypoint.position.z
       }});
     });
-}
-
-function init(){
-
-  SceneManager.init();
-  place = Places.findOne({});
-  SceneManager.panos = place.panos;
-  SceneManager.activePano = 0;
-
-
-  console.log('loading');
-  loadAllImages();
-
-  SceneManager.addMultiple([
-    Utils.panoFactory( SceneManager.panos[SceneManager.activePano].imagePath , 'pano' )]
-    .concat(getWayPoints(SceneManager.activePano)));
-
-  Utils.animate( [SceneManager, Utils] );
-
-  Utils.changeScene = function(){
-    deleteAllWaypointsInScene();
-    addNewWayPointsToScene();
-  };
 }
 
 function loadAllImages(){
