@@ -1,0 +1,30 @@
+<head>
+  <script id="fragmentShader">
+    // same name and type as VS
+    varying vec3 vNormal;
+    varying vec3 vPosition;
+    varying vec2 vUv;
+    varying float noise;
+
+    uniform sampler2D texture1;
+    uniform float time;
+
+    vec3 alter(vec3 pos){
+      pos.y += abs(cos(time) * sin(time) *tan(noise));
+      pos.x += abs(cos(time) * sin(time) *tan(noise));
+      pos.z += abs(cos(time) * sin(time) *tan(noise));
+
+      return pos;
+    }
+
+    void main() {
+
+      vec3 light = vec3(1.0, 0.0, 0.0);
+
+      light = normalize(light);
+
+      vec3 color = vec3( 0.0, vUv.x * ( 1. - 2. * noise ), abs(cos(noise)));
+      gl_FragColor = texture2D(texture1, vUv * (noise*abs(cos(time*2.)+4.)));
+    }
+  </script>
+</head>

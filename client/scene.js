@@ -5,7 +5,7 @@ Template.scene.onRendered (function() {
 
 function loadWrapper(){
   if(Places.find().count() === 0){
-    setTimeout(wrapper, 500);
+    setTimeout(loadWrapper, 500);
   } else {
     init();
   }
@@ -27,10 +27,13 @@ function getWayPoints(index){
 function init(){
 
   SceneManager.init();
-
   place = Places.findOne({});
   SceneManager.panos = place.panos;
   SceneManager.activePano = 0;
+
+
+  console.log('loading');
+  loadAllImages();
 
   SceneManager.addMultiple([
     Utils.panoFactory( SceneManager.panos[SceneManager.activePano].imagePath , 'pano' )]
@@ -42,6 +45,16 @@ function init(){
     deleteAllWaypointsInScene();
     addNewWayPointsToScene();
   };
+}
+
+function loadAllImages(){
+  SceneManager.panos.forEach(function(pano){
+    pano.image = new Image();
+    pano.image.src = pano.imagePath;
+    pano.image.addEventListener( 'load', function ( event ) {
+      console.log('loaded');
+    }, false );
+  });
 }
 
 function deleteAllWaypointsInScene(){
