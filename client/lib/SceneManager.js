@@ -32,7 +32,7 @@ function setupExtras(){
 }
 
 function addLights(){
-  this.light = new THREE.AmbientLight( 0xafafaf ); // soft white light
+  this.light = new THREE.PointLight( 0x3f3f3f, 0.8, 100 );
   this.scene.add( this.light );
 }
 

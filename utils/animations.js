@@ -57,12 +57,8 @@ Utils.transition = function(options) {
   }
 
   /* copy all props on the {options} object into the {animation} object
-  *  TODO: since the var is hoisted in es5 either add an es6 transpiler or declare
-  *        'var prop' at the top of the function
   * * * */
-  for (var prop in options ) {
-    animation[prop] = options[prop];
-  }
+  animation = options;
 
   /* since this object was created then we want to kick off its animation process by setting
    * isAnimating method to true
@@ -100,12 +96,14 @@ function getObjectByType(type, opts){
   /* tween definitions
    *
    * * * */
+  // TODO VALIDATE opts -- maybe call different switch
   switch (type) {
     case 'fade-out': payload.opts = { stop: 0, prop: 'mesh.material.opacity' }; return payload;
     case 'fade-in': payload.opts = { stop: 1, prop: 'mesh.material.opacity' }; return payload;
     case 'move-x': payload.opts = { stop: opts.stop, prop: 'mesh.position.x' }; return payload;
     case 'move-y': payload.opts = { stop: opts.stop, prop: 'mesh.position.y' }; return payload;
     case 'move-z': payload.opts = { stop: opts.stop, prop: 'mesh.position.z' }; return payload;
+    case 'gradient-shift': payload.opts = { stop: opts.stop, type: 'vector', prop: 'mesh.material.color' }; return payload;
     default: warn('Internal Code Problem! Default animation.type was NOT set to \'fade-out\'.');
   }
 
@@ -154,6 +152,8 @@ function tween (opts, parent) {
   var target = getParentObject(opts.prop, parent),
       propName = getPropName(opts.prop);
 
+  /* if */
+
   /* apply an add or subtract to the appropriate value on the reference object based the relationship
    * of its value compared to stop's value
    * * * */
@@ -166,7 +166,7 @@ function tween (opts, parent) {
   /* If duration has run out then set animating to false and let the handler destroy the object that owns
    * this function
    * * * */
-  if ( parent.duration <= 0 || !addOrSubtract(target, propName, opts.stop, parent) ) {
+  if ( parent.duration <= 0 || !addOrSubtract(target, propName, opts, parent) ) {
     parent.mesh.isAnimating = false;
     parent.isAnimating = false;
   }
@@ -176,20 +176,40 @@ function tween (opts, parent) {
 /* addOrSubtract - will apply the appropriate amount based on the number of frames left between duration and last delta time call
  *   it will return true if a addition happened and false if the two numbers are equal
  * * * */
-function addOrSubtract (target, propName, stop, parent) {
+function addOrSubtract (target, propName, opts, parent) {
 
-  parent.amount = (Math.abs(target[propName]-stop))/(parent.duration/SceneManager.delta);
+  if(opts.type === 'vector'){
+    return applyVector(target, propName, opts, parent );
+  }
 
-  if (target[propName] > stop) {
+  parent.amount = (Math.abs(target[propName]-opts.stop))/(parent.duration/SceneManager.delta);
+
+  if (target[propName] > opts.stop) {
     target[propName] -= parent.amount;
     return true;
-  } else if ( target[propName] < stop ) {
+  } else if ( target[propName] < opts.stop ) {
     target[propName] += parent.amount;
     return true;
   }
 
   return false;
 
+}
+
+function applyVector(target, propName, opts, parent){
+  target = target[propName];
+
+  for(var prop in opts.stop){
+    if(typeof(target[prop]) !== 'undefined'){
+      parent.amount = (Math.abs(target[prop]-opts.stop[prop]))/(parent.duration/SceneManager.delta);
+      if (target[prop] > opts.stop[prop]) {
+        target[prop] -= parent.amount;
+      } else if ( target[prop] < opts.stop[prop] ) {
+        target[prop] += parent.amount;
+      }
+    }
+  }
+  return true;
 }
 
 function defaultTranstionMessage () {

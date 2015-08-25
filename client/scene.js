@@ -2,6 +2,11 @@ Template.scene.onRendered (function() {
   loadWrapper();
 });
 
+Utils.events({
+  'lookAt .waypoint': function(mesh){
+    Pano.animateWaypoint(mesh);
+  }
+});
 
 function loadWrapper(){
   if(Places.find().count() === 0){

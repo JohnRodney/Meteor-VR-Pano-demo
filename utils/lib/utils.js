@@ -1,9 +1,18 @@
 Utils = {};
 
-Utils.handleCollisions = function(callback, name) {
+Utils.eventQue = {};
+
+Utils.events = function(obj){
+  for (var prop in obj ) {
+    Utils.eventQue[prop] = obj[prop];
+  }
+};
+
+Utils.handleCollisions = function() {
   SceneManager.getLookAtCollisions().forEach( function(mesh) {
-    if (mesh.object.name === name && !mesh.object.isAnimating) {
-      callback(mesh.object);
+    var fn = Utils.eventQue['lookAt .' + mesh.object.name];
+    if(typeof(fn) === 'function'){
+      fn(mesh.object);
     }
   });
 };
@@ -12,6 +21,10 @@ Utils.handleAnimations = function() {
   Utils.animations.forEach(function(animation, i, animations){
     animation.applyAnimation.callback(animation.applyAnimation.opts, animation);
     if(!animation.isAnimating){
+      console.log(typeof(animation.callback));
+      if(typeof(animation.callback) === 'function'){
+        animation.callback(animation.mesh);
+      }
       animations.splice(i, 1);
     }
   });
@@ -20,13 +33,12 @@ Utils.handleAnimations = function() {
 Utils.uniforms = [];
 
 Utils.update = function(){
-  Utils.handleCollisions(changePanos, 'waypoint');
+  Utils.handleCollisions();
   Utils.handleAnimations();
-  Utils.uniforms.forEach(function(mesh){
-    mesh.material.uniforms['time'].value = .00025 * ( Date.now() - SceneManager.start );
-    mesh.rotation.x += 0.01;
-  });
 };
+
+
+
 
 function changePanos(mesh) {
   var targetPano = Places.findOne({}).panos[mesh.pointer];
