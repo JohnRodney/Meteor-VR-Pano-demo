@@ -97,6 +97,10 @@ function getObjectByType(type, opts){
    *
    * * * */
   // TODO VALIDATE opts -- maybe call different switch
+  /* this is where things get a little wonky and its important to understand that playload.opts gets passed to tween
+   * also important to notice the opts.stop here actually comes from the direct user implimentation.
+   * This is why is important to validate that opts is real before calling the method stop on it.
+   * * * */
   switch (type) {
     case 'fade-out': payload.opts = { stop: 0, prop: 'mesh.material.opacity' }; return payload;
     case 'fade-in': payload.opts = { stop: 1, prop: 'mesh.material.opacity' }; return payload;
@@ -178,7 +182,9 @@ function tween (opts, parent) {
  * * * */
 function addOrSubtract (target, propName, opts, parent) {
 
-  if(opts.type === 'vector'){
+  /* added Later this checks to see if opts.type is a vector if so it uses object tween rather than value tween */
+  if(opts.type === 'vector') {
+    /* even though the intent was the apply a vector the function will apply any object so maybe should have a name reflect that */
     return applyVector(target, propName, opts, parent );
   }
 
@@ -196,20 +202,29 @@ function addOrSubtract (target, propName, opts, parent) {
 
 }
 
-function applyVector(target, propName, opts, parent){
+function applyVector(target, propName, opts, parent) {
+  /* check if at least ONE value was changed in this function if not then the object is at its final state and we can stop the animation */
+  var changed = false;
+  /* this is used because since this is an object the propName is already a passed by reference object */
   target = target[propName];
 
+  /* iterate through all props on the final state object and if the target object has that prop then tween the value towards the final value */
   for(var prop in opts.stop){
+
     if(typeof(target[prop]) !== 'undefined'){
       parent.amount = (Math.abs(target[prop]-opts.stop[prop]))/(parent.duration/SceneManager.delta);
+
       if (target[prop] > opts.stop[prop]) {
         target[prop] -= parent.amount;
+        changed = true;
       } else if ( target[prop] < opts.stop[prop] ) {
         target[prop] += parent.amount;
+        changed = true;
       }
     }
+
   }
-  return true;
+  return changed;
 }
 
 function defaultTranstionMessage () {

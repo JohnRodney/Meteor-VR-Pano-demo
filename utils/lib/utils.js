@@ -2,7 +2,7 @@ Utils = {};
 
 Utils.eventQue = {};
 
-Utils.events = function(obj){
+Utils.events = function(obj) {
   for (var prop in obj ) {
     Utils.eventQue[prop] = obj[prop];
   }
@@ -32,31 +32,27 @@ Utils.handleAnimations = function() {
 
 Utils.uniforms = [];
 
-Utils.update = function(){
+Utils.update = function() {
   Utils.handleCollisions();
   Utils.handleAnimations();
 };
 
-
-
-
-function changePanos(mesh) {
+Utils.changePanos = function(mesh) {
   var targetPano = Places.findOne({}).panos[mesh.pointer];
 
-  if(compareIncompleteUrls(targetPano.imagePath, Utils.material.map.image.src) || Utils.material.map.isLoading){
+  if(compareIncompleteUrls(targetPano.imagePath, Utils.material.map.image.src) || Utils.material.map.isLoading) {
     return false;
   }
 
   return handlePanoChange(mesh.pointer, targetPano.imagePath);
 }
 
-function handlePanoChange(pointer, imagePath){
+function handlePanoChange(pointer, imagePath) {
   Utils.material.map.isLoading = true;
   SceneManager.activePano = pointer;
   Utils.changeScene();
   Utils.material.map.image.src = imagePath;
-  setOnLoadCallback();
-  return true;
+  return setOnLoadCallback();
 }
 
 function compareIncompleteUrls(incomplete, complete) {
@@ -64,8 +60,6 @@ function compareIncompleteUrls(incomplete, complete) {
 }
 
 function setOnLoadCallback() {
-  Utils.material.map.isLoading = true;
-
   Utils.material.map.image.addEventListener( 'load', function ( event ) {
     Utils.material.map.needsUpdate = true;
     Utils.material.map.isLoading = false;

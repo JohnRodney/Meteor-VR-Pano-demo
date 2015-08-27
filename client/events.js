@@ -11,10 +11,8 @@ function onWindowResize() {
 }
 
 function onMouseClick(event) {
-
   SceneManager.mouse.x = (event.clientX / window.innerWidth ) * 2 - 1;
   SceneManager.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
 }
 
 window.addEventListener('keydown', onKey, true);

@@ -1,4 +1,4 @@
-Meteor.startup(function(){
+Meteor.startup(function() {
   if(Places.find().count() === 0){
     Places.insert({
       panos: [
@@ -10,14 +10,14 @@ Meteor.startup(function(){
   }
 });
 
-function panoFactory(waypoints, image){
+function panoFactory(waypoints, image) {
   return {
     waypoints: waypoints,
     imagePath: image,
   };
 }
 
-function waypointFactory(i, x, y, z){
+function waypointFactory(i, x, y, z) {
   return {
     index: i,
     position: {
