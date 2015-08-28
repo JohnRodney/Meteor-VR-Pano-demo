@@ -156,12 +156,6 @@ function tween (opts, parent) {
   var target = getParentObject(opts.prop, parent),
       propName = getPropName(opts.prop);
 
-  /* if */
-
-  /* apply an add or subtract to the appropriate value on the reference object based the relationship
-   * of its value compared to stop's value
-   * * * */
-
   /* Subtract the delta time (time since last frame) from the duration in order to control the length of time
    * that this animation is alive
    * * * */
@@ -228,7 +222,5 @@ function applyVector(target, propName, opts, parent) {
 }
 
 function defaultTranstionMessage () {
-
   console.warn('A valid transition was not passed.  Applying a default fade-out!');
-
 }
