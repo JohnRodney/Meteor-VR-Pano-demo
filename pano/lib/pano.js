@@ -19,5 +19,4 @@ function animateWaypoint(mesh){
 
 function helloWorld(){
   Pano.waypointIsAnimating = false;
-  console.log('hello world');
 }

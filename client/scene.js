@@ -1,7 +1,6 @@
 Utils.events({
   'lookAt .waypoint': function(mesh) {
-    //Pano.animateWaypoint(mesh);
-    Utils.changePanos(mesh);
+    Pano.animateWaypoint(mesh);
   }
 });
 
