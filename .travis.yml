@@ -10,12 +10,8 @@ node_js:
 before_install:
   - npm i -g npm@^2.0.0
   - npm install --save-dev eslint-config-airbnb eslint-plugin-react eslint@^1.0.0
-before_script:
-  - npm prune
 script:
   - eslint . --ext .jsx
-after_success:
-  - npm run semantic-release
 branches:
   except:
     - "/^v\\d+\\.\\d+\\.\\d+$/"
