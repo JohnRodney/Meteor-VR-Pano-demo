@@ -1,6 +1,4 @@
-Utils.animate = function(objsToUpdate) {
-  objsToUpdate.forEach( function( obj ) { obj.update(); } );
-  requestAnimationFrame( function() { this.animate( objsToUpdate ); }.bind(this) );
+Utils.animate = function animate(objsToUpdate) {
+  objsToUpdate.forEach((obj) => { obj.update(); });
+  requestAnimationFrame(() => { this.animate(objsToUpdate); });
 };
-
-

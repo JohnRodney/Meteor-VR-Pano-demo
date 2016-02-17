@@ -1,20 +1,56 @@
-Utils.events({
-  'lookAt .waypoint': function(mesh) {
-    //Pano.animateWaypoint(mesh);
-    Utils.changePanos(mesh);
-  }
-});
+function loadAllImages() {
+  SceneManager.panos.forEach((pano) => {
+    pano.image = new Image();
+    pano.image.src = pano.imagePath;
+    pano.image.addEventListener('load', () => {
+      console.log('loaded');
+    }, false);
+  });
+}
 
-Template.scene.onRendered (function() {
-  loadWrapper();
-});
+function getWayPoints(index) {
+  return SceneManager.panos[index].waypoints.map((waypoint) => {
+    return new Waypoint({
+      pointer: waypoint.index,
+      position: {
+        x: waypoint.position.x,
+        y: waypoint.position.y,
+        z: waypoint.position.z,
+      },
+    });
+  });
+}
 
-function loadWrapper(){
-  if(Places.find().count() === 0) {
-    setTimeout(loadWrapper, 500);
-  } else {
-    init();
-  }
+function deleteAllWaypointsInScene() {
+  SceneManager.scene.children.filter((child) => {
+    if (child.name === 'waypoint') { return child; }
+  })
+  .map((res) => { SceneManager.scene.remove(res); });
+}
+
+function addNewWayPointsToScene() {
+  SceneManager.addMultiple(getWayPoints(SceneManager.activePano));
+}
+
+function animateAndInitUtils() {
+  Utils.animate([SceneManager, Utils]);
+
+  Utils.changeScene = function change() {
+    deleteAllWaypointsInScene();
+    addNewWayPointsToScene();
+  };
+}
+
+function addMeshesToScene() {
+  SceneManager.addMultiple([
+    Utils.panoFactory(SceneManager.panos[SceneManager.activePano].imagePath, 'pano'),
+  ].concat(getWayPoints(SceneManager.activePano)));
+}
+
+function setupPanoSceneInfo() {
+  SceneManager.panos = Places.findOne({}).panos;
+  SceneManager.activePano = 0;
+  loadAllImages();
 }
 
 function init() {
@@ -24,59 +60,20 @@ function init() {
   animateAndInitUtils();
 }
 
-function animateAndInitUtils() {
-  Utils.animate( [SceneManager, Utils] );
-
-  Utils.changeScene = function(){
-    deleteAllWaypointsInScene();
-    addNewWayPointsToScene();
-  };
+function loadWrapper() {
+  if (Places.find().count() === 0) {
+    setTimeout(loadWrapper, 500);
+  } else {
+    init();
+  }
 }
 
-function addMeshesToScene() {
-  SceneManager.addMultiple([
-  Utils.panoFactory( SceneManager.panos[SceneManager.activePano].imagePath , 'pano' )]
-    .concat(getWayPoints(SceneManager.activePano)));
-}
+Utils.events({
+  'lookAt .waypoint'(mesh) {
+    Utils.changePanos(mesh);
+  },
+});
 
-function setupPanoSceneInfo() {
-  SceneManager.panos = Places.findOne({}).panos;
-  SceneManager.activePano = 0;
-  loadAllImages();
-}
-
-function getWayPoints(index) {
-  return SceneManager.panos[index].waypoints.map(function(waypoint) {
-    return new Waypoint({
-      pointer: waypoint.index,
-      position: {
-        x: waypoint.position.x,
-        y: waypoint.position.y,
-        z: waypoint.position.z
-      }});
-    });
-}
-
-function loadAllImages() {
-  SceneManager.panos.forEach(function(pano) {
-    pano.image = new Image();
-    pano.image.src = pano.imagePath;
-    pano.image.addEventListener( 'load', function ( event ) {
-      console.log('loaded');
-    }, false );
-  });
-}
-
-function deleteAllWaypointsInScene() {
-  SceneManager.scene.children.filter(function(child) {
-    if(child.name === 'waypoint'){
-      return child;
-    }
-  }).map(function(res) {
-    SceneManager.scene.remove(res);
-  });
-}
-
-function addNewWayPointsToScene() {
-  SceneManager.addMultiple(getWayPoints(SceneManager.activePano));
-}
+Template.scene.onRendered(function renderScene() {
+  loadWrapper();
+});

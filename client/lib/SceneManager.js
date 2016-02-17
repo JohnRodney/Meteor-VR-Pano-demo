@@ -1,27 +1,16 @@
-SceneManager = {};
-
-SceneManager.init = function() {
-
-  addRenderer.call(this);
-  addScene.call(this);
-  addCamera.call(this);
-  addVREffect.call(this);
-  addVRManager.call(this);
-  addCollisionTools.call(this);
-  addLights.call(this);
-  setupExtras.call(this);
-
-};
-
-SceneManager.addMultiple = function(arr) {
-  arr.forEach( function(mesh) { this.scene.add( mesh ); }.bind(this) );
-};
+function setLookAt() {
+  this.raycaster.set(this.camera.position, new THREE.Vector3(0, 0, -1).applyQuaternion(this.camera.quaternion));
+}
 
 function update() {
   this.setLookAt();
   this.delta = this.clock.getDelta();
   this.controls.update();
   this.manager.render(this.scene, this.camera);
+}
+
+function getLookAtCollisions() {
+  return this.raycaster.intersectObjects(this.scene.children);
 }
 
 function setupExtras() {
@@ -32,8 +21,8 @@ function setupExtras() {
 }
 
 function addLights() {
-  this.light = new THREE.PointLight( 0x3f3f3f, 0.8, 100 );
-  this.scene.add( this.light );
+  this.light = new THREE.PointLight(0x3f3f3f, 0.8, 100);
+  this.scene.add(this.light);
 }
 
 function addCollisionTools() {
@@ -43,7 +32,7 @@ function addCollisionTools() {
 }
 
 function addVRManager() {
-  this.manager = new WebVRManager(this.renderer, this.effect, {hideButton: false});
+  this.manager = new WebVRManager(this.renderer, this.effect, { hideButton: false });
 }
 
 function addVREffect() {
@@ -54,6 +43,10 @@ function addVREffect() {
 function addCamera() {
   this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.3, 10000);
   this.controls = new THREE.VRControls(this.camera);
+}
+
+function deleteByName(name) {
+  this.remove(this.getObjectByName(name));
 }
 
 function addScene() {
@@ -67,14 +60,19 @@ function addRenderer() {
   document.body.appendChild(this.renderer.domElement);
 }
 
-function deleteByName(name) {
-  this.remove( this.getObjectByName( name ) );
-}
+SceneManager = {};
 
-function setLookAt() {
-  this.raycaster.set(this.camera.position, new THREE.Vector3(0,0,-1).applyQuaternion( this.camera.quaternion));
-}
+SceneManager.init = function init() {
+  addRenderer.call(this);
+  addScene.call(this);
+  addCamera.call(this);
+  addVREffect.call(this);
+  addVRManager.call(this);
+  addCollisionTools.call(this);
+  addLights.call(this);
+  setupExtras.call(this);
+};
 
-function getLookAtCollisions() {
-  return this.raycaster.intersectObjects( this.scene.children );
-}
+SceneManager.addMultiple = function addMultiple(arr) {
+  arr.forEach((mesh) => { this.scene.add(mesh); });
+};
